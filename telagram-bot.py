@@ -1,36 +1,32 @@
-import sys
-import time
-import random
-import datetime
 import telepot
+import time
 import RPi.GPIO as GPIO
 
-#LED
-def on(pin):
-        GPIO.output(pin,GPIO.HIGH)
-        return
-def off(pin):
-        GPIO.output(pin,GPIO.LOW)
-        return
-# to use Raspberry Pi board pin numbers
-GPIO.setmode(GPIO.BOARD)
-# set up GPIO output channel
-GPIO.setup(11, GPIO.OUT)
-
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+GPIO.setup(2,GPIO.OUT)
+GPIO.output(2,False)
 def handle(msg):
     chat_id = msg['chat']['id']
     command = msg['text']
-
     print 'Got command: %s' % command
 
-    if command == 'on':
-       bot.sendMessage(chat_id, on(11))
-    elif command =='off':
-       bot.sendMessage(chat_id, off(11))
-
-bot = telepot.Bot('Bot Token')
+    if(command == "ping"):
+        bot.sendMessage(chat_id,"pong")
+        print"pong"
+    if(command == 'pic'):
+        bot.sendPhoto(chat_id,open('NIRMITHY.jpg'))
+    if(command == "ledon"):
+    	GPIO.output(2,True)
+	bot.sendMessage(chat_id,"LED is ON now")
+    if(command == "ledoff"):
+    	GPIO.output(2,False)
+	bot.sendMessage(chat_id,"LED is OFF now")
+bot = telepot.Bot('321092089:AAG3-sqps6MPk9wR4YRdiWgEdR65cYJYr4Y')
 bot.message_loop(handle)
-print 'I am listening...'
+
 
 while 1:
      time.sleep(10)
+GPIO.cleanup()
+
